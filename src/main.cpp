@@ -1,4 +1,5 @@
-#include <cstddef>
+//#include <cstddef>
+#include <iostream>
 
 struct bucket
 {
@@ -6,8 +7,15 @@ struct bucket
     int* data;
 };
 
+void bucketSort(int* arr, int n);
+
 int main()
 {
+    int n = 7;
+
+    int* arr = new int[n] {2, 3, 9, 1, 0, 8, 1};
+
+    bucketSort(arr, n);
 
     return 0;
 }
@@ -80,6 +88,19 @@ void countSort(int* arr, int n)
     delete[] count;
 }
 
+void showBuckets(int* arr, int n)
+{
+    if (!n)
+    {
+        return;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        std::cout << arr[i] << ' ';
+    }
+}
+
 void bucketSort(int* arr, int n)
 {
     bucket buckets[10];
@@ -102,6 +123,27 @@ void bucketSort(int* arr, int n)
     //мы выполняем сортировку внутри каждого кармана 
     //и соединяем их в один массив по порядку их индексов.
 
-    
-}
+    int arrIndex = 0;
+    for (int i = 0; i < 10; ++i)
+    {
+        countSort(buckets[i].data, buckets[i].count);
+        for (int j = 0; j < buckets[i].count; ++j)
+        {
+            arr[arrIndex] = buckets[i].data[j];
+            arrIndex++;
+        }
+    }
 
+    for (int i = 0; i < 10; ++i)
+    {
+        std::cout << "Bucket " << i << ":";
+        showBuckets(buckets[i].data, buckets[i].count);
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < n; ++i)
+    {
+        std::cout << arr[i] << ' ';
+    }
+    std::cout << std::endl;
+}
